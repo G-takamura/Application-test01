@@ -1,33 +1,20 @@
 import os
-from openai import OpenAI
+from anthropic import Anthropic
 
-# 1. クライアントの初期化（プロバイダーのBase URLとAPIキーを指定）
-# ※ DeepInfra を使用する例:
-client = OpenAI(
-    api_key=os.environ.get("DEEPINFRA_API_KEY"),  # 環境変数からAPIキーを取得
-    base_url="https://api.deepinfra.com/v1/openai",
+# APIキーを環境変数から取得（または直接文字列で指定）
+# os.environ["ANTHROPIC_API_KEY"] = "your-api-key-here"
+
+client = Anthropic(
+    api_key=os.environ.get("ANTHROPIC_API_KEY")
 )
 
-def generate_text(prompt: str):
-    try:
-        response = client.chat.completions.create(
-            model="meta-llama/Llama-4-Maverick-17B-Instruct",
-            messages=[
-                {"role": "system", "content": "あなたは優秀なAIアシスタントです。"},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=1024,
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        print(f"エラーが発生しました: {e}")
-        return None
+response = client.messages.create(
+    model="claude-sonnet-4-5-20250929",
+    max_tokens=1000,
+    messages=[
+        {"role": "user", "content": "こんにちは！自己紹介を簡単にしてください。"}
+    ]
+)
 
-if __name__ == "__main__":
-    prompt_text = "Pythonでクイックソートを実装するコードを書いてください。"
-    result = generate_text(prompt_text)
-    
-    if result:
-        print("--- レスポンス ---")
-        print(result)
+# レスポンスの出力
+print(response.content[0].text)
