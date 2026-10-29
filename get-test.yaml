@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Sample User API
+  version: 1.0.0
+  description: ユーザー情報を管理するシンプルなAPI
+
+paths:
+  /users/{id}:
+    get:
+      summary: ユーザー情報取得
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ユーザーID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 101
+                  name:
+                    type: string
+                    example: "田中 太郎"
+                  email:
+                    type: string
+                    format: email
+                    example: "tanaka@example.com"
+        '404':
+          description: ユーザーが見つかりません
